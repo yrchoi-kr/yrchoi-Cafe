@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>    
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>예약관리</title>
+<!-- 제이쿼리 코어 임포트(아래) -->
+<script src='http://code.jquery.com/jquery-3.5.0.js'> </script>
+<!-- 화면 초기화 시키는 reset style import :크로스브라우징 처리하기위해서-->
+<!-- 크롬, IE, 엣지, Safari, firefox의 h1, p, ul, div 태그의 크기가 조금씩 다름 -->
+<!-- 작업한 결과가 모든 브라우저(크로싱 브라우저)에 똑같이 보이게 하기 위한 절차가 reset.css(아래 작업내용) -->
+<link rel="stylesheet" href="/css/cafeOrder.css">
+<!-- 부트스트랩CSS코어 임포트 -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<!-- 부트스트랩JS코어 임포트 -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+</head>
+<body class=abody style="background-image: url(Image/cafe_order.jpg);">
+    <!-- 메인콘텐츠영역 -->
+    <div id="container">
+        <!-- 갤러리최근게시물영역 -->
+        <div style=" float: left; width: 33%;padding-left:5%;margin-top: 5%;">
+            <h2 style="border: 1px solid; width: 60%;color: white;text-align: center;;border-radius:10px;">메뉴목록</h2>
+            <div class="about_box" style="border: 1px solid; width: 80%;color: white;text-align: center;border-radius:10px;" >
+                <select multiple class="form-control" style="width:80%;margin-left:7%">
+                    <option id=late>카페라떼 3000</option>
+                    <option id=espresso>에스프레소 2000</option>
+                    <option id=americano>아메리카노 2500</option>
+                    <option id=cafuchino>카푸치노 3500</option>
+                </select>
+            </div>
+        </div>
+        <div class="reservationMid" style=" float: left; width: 33%;padding-left:5%;margin-top: 5%;">
+            <h2 style="border: 1px solid; width: 60%;color: white;text-align: center;;border-radius:10px;">주문 목록</h2>
+            <div>
+                <select id=orderList multiple class="form-control" style="width:80%;">
+   
+                </select>
+            </div>
+            <div>
+                <table style="border-collapse: separate;border-spacing: 0 2px;">
+                    <tr>
+                        <div class="form-group">
+                            <td style="color: white;border-radius: 5px;text-align: center;">메뉴명</td>
+                            <td>
+                                <div class="col-sm-12">
+                                    <input type="text" id=menuNameOL class="form-control" placeholder="메뉴목록 선택해주세요">
+                                </div>
+                            </td>
+                        </div> 
+                    </tr>
+                    <tr>
+                        <div class="form-group">
+                            <td style="color: white;border-radius: 5px;text-align: center;">수량</td>
+                            <td>
+                                <div class="col-sm-12">
+                                    <input id=menuCntOL type="text" class="form-control" placeholder="수량 입력해주세요">
+                                </div>
+                            </td>
+                        </div> 
+                    </tr>
+                    <tr>
+                        <div class="form-group">
+                            <td style="color: white;border-radius: 5px;text-align: center;">총액</td>
+                            <td>
+                                <div class="col-sm-12">
+                                    <input id=menetotalOL type="text" class="form-control" placeholder="주문 메뉴의 총액">
+                                </div>
+                            </td>
+                        </div> 
+                    </tr>
+                </table>
+              
+            </div>
+            <div style="margin-left:10%;margin-top: 3%;">
+                <button class="btn btn-primary" type="submit" id =createMenu style="width:20%;" onclick="">추가</button> &nbsp;
+                <button class="btn btn-danger" type="submit" id =deleteMenu  style="width:20%;" onclick="">삭제</button> '<br>'
+            </div>
+            <div>
+                <button class="btn btn-warning" type="reset" id =orderMenu  style="width:30%; margin-left: 16%;" onclick="">주문</button>
+            </div>
+        </div>
+        <div style=" float: left; width: 33%;padding-left:5%;margin-top: 5%;">
+            <h2 style="border: 1px solid; width: 60%;color: white;text-align: center;;border-radius:10px;">매출현황</h2>
+            <div class="about_box" style="border: 1px solid; width: 65%;color: white;text-align: center;border-radius:10px;">
+                <select id=salesReport class="form-control" size="5">
+
+                </select>
+            </div>
+        </div>
+        <div style=" float: left; width: 33%;padding-left:5%;margin-top: 5%;">
+            <h2 style="border: 1px solid; width: 60%;color: white;text-align: center;;border-radius:10px;">주문자 모바일 번호</h2>
+            <div class="about_box" style="border: 1px solid; width: 60%;color: white;text-align: center;border-radius:10px;">
+                    <input id=orderMobile type="text" class="form-control" placeholder="모바일번호를입력해주세요">
+            </div>
+        </div>
+    </div>
+    <!-- //메인콘텐츠영역 -->
+</body>
+<script src='http://code.jquery.com/jquery-3.5.0.js'></script>
+<script>
+    var menuPrice;
+    var arr1 = [];
+    var arr2 = [];
+    var arr3 = [];
+$(document)
+    .on('click','#late',function(){
+        $('#menuNameOL').val("카페라떼");
+        menuPrice=3000;
+        return false; //stop bubbling
+    })
+    .on('click','#espresso',function(){
+        $('#menuNameOL').val("에스프레소");
+        menuPrice=2000;
+        return false; //stop bubbling
+    })
+    .on('click','#americano',function(){
+        $('#menuNameOL').val("아메리카노");
+        menuPrice=2500;
+        return false; //stop bubbling
+    })
+    .on('click','#cafuchino',function(){
+        $('#menuNameOL').val("카푸치노");
+        menuPrice=3500;
+        return false; //stop bubbling
+    })
+    .on('blur','#menuCntOL',function(){
+        console.log(menuPrice);
+        totalPrice = menuPrice*parseInt($('#menuCntOL').val());
+        $('#menetotalOL').val(totalPrice);
+        return false; //stop bubbling
+    })
+    .on('click','#createMenu',function(){
+        arr1.push('<option>'+$('#menuNameOL').val()+' '+$('#menuCntOL').val()+'잔'+' '+$('#menetotalOL').val()+'원 </option>');
+        arr2.push($('#menuCntOL').val()+'잔');
+        console.log(arr2[arr2.length-1]);
+        arr3.push($('#menuNameOL').val());
+        console.log(arr3[1]);
+        $('#orderList').append(arr1[arr1.length-1])
+        return false; //stop bubbling
+    })
+    .on('click','#deleteMenu',function(){
+        $('#orderList').find('option:last').remove();
+        return false;
+    })
+    .on('click','#orderMenu',function(){
+        for(i=0;i<arr1.length;i++){
+            $('#salesReport').append('<option>'+$('#orderMobile').val()+' '+arr3[i]+' '+arr2[i]+'</option>')
+            console.log(arr2[i]);
+            console.log(arr3[i]);
+        } 
+        $('#orderList').children().remove();      
+        arr1 = [];
+        arr2 = [];
+        arr3 = [];
+        return false;
+    })
+</script>
+</html>
